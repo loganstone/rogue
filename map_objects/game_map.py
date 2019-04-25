@@ -111,7 +111,7 @@ class GameMap:
                     fighter_component = Fighter(hp=10, defense=0, power=3)
                     ai_component = BasicMonster()
                     monster = Entity(x, y, 'o', libtcod.desaturated_green,
-                                     '오크', blocks=True,
+                                     'Orc', blocks=True,
                                      render_order=RenderOrder.ACTOR,
                                      fighter=fighter_component,
                                      ai=ai_component)
@@ -119,7 +119,7 @@ class GameMap:
                     fighter_component = Fighter(hp=16, defense=1, power=4)
                     ai_component = BasicMonster()
                     monster = Entity(x, y, 'T', libtcod.darker_green,
-                                     '트롤', blocks=True,
+                                     'Troll', blocks=True,
                                      render_order=RenderOrder.ACTOR,
                                      fighter=fighter_component,
                                      ai=ai_component)
