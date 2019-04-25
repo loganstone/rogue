@@ -1,7 +1,9 @@
 import tcod as libtcod
+import utils
 
-from entity import Entity
+from entity import Entity, get_blocking_entities_at_location
 from fov_functions import initialize_fov, recompute_fov
+from game_states import GameStates
 from input_handlers import handle_keys
 from map_objects.game_map import GameMap
 from render_functions import clear_all, render_all
@@ -21,6 +23,8 @@ def main():
     fov_light_walls = True
     fov_radius = 10
 
+    max_monsters_per_room = 3
+
     colors = {
         'dark_wall': libtcod.Color(0, 0, 100),
         'dark_ground': libtcod.Color(50, 50, 150),
@@ -28,13 +32,8 @@ def main():
         'light_ground': libtcod.Color(200, 180, 50),
     }
 
-    player = Entity(int(screen_width / 2),
-                    int(screen_height / 2),
-                    '@', libtcod.white)
-    npc = Entity(int(screen_width / 2 - 5),
-                 int(screen_height / 2),
-                 '@', libtcod.yellow)
-    entities = [npc, player]
+    player = Entity(0, 0, '@', libtcod.white, 'Player', blocks=True)
+    entities = [player]
 
     libtcod.console_set_custom_font(
         'arial10x10.png',
@@ -45,7 +44,8 @@ def main():
     con = libtcod.console.Console(screen_width, screen_height)
     game_map = GameMap(map_width, map_height)
     game_map.make_map(max_rooms, room_min_size, room_max_size,
-                      map_width, map_height, player)
+                      map_width, map_height,
+                      player, entities, max_monsters_per_room)
 
     fov_recompute = True
 
@@ -53,6 +53,8 @@ def main():
 
     key = libtcod.Key()
     mouse = libtcod.Mouse()
+
+    game_state = GameStates.PLAYERS_TURN
 
     while not libtcod.console_is_window_closed():
         libtcod.sys_check_for_event(libtcod.EVENT_KEY_PRESS, key, mouse)
@@ -74,17 +76,37 @@ def main():
         exit = action.get('exit')
         fullscreen = action.get('fullscreen')
 
-        if move:
+        if move and game_state == GameStates.PLAYERS_TURN:
             dx, dy = move
-            if not game_map.is_blocked(player.x + dx, player.y + dy):
-                player.move(dx, dy)
-                fov_recompute = True
+            destination_x = player.x + dx
+            destination_y = player.y + dy
+
+            if not game_map.is_blocked(destination_x, destination_y):
+                target = get_blocking_entities_at_location(
+                    entities, destination_x, destination_y)
+                if target:
+                    print('당신은 ' +
+                          target.name +
+                          utils.pick_nouns(target.name, '을', '를') +
+                          ' 신나게 때려 성가시게 합니다!')
+                else:
+                    player.move(dx, dy)
+                    fov_recompute = True
+                game_state = GameStates.ENEMY_TURN
 
         if exit:
             return True
 
         if fullscreen:
             libtcod.console_set_fullscreen(not libtcod.console_is_fullscreen())
+
+        if game_state == GameStates.ENEMY_TURN:
+            for entity in entities:
+                if entity != player:
+                    print(entity.name +
+                          utils.pick_nouns(entity.name, '이', '가') +
+                          ' 존재의 의미를 생각해 봅니다.')
+            game_state = GameStates.PLAYERS_TURN
 
 
 if __name__ == '__main__':
