@@ -1,5 +1,7 @@
 import tcod as libtcod
 
+from components.ai import ConfusedMonster
+
 from game_messages import Message
 
 
@@ -84,5 +86,40 @@ def cast_fireball(*args, **kwargs):
                 entity.name, damage)
             results.append({'message': Message(text, libtcod.orange)})
             results.extend(entity.fighter.take_damage(damage))
+
+    return results
+
+
+def cast_confuse(*args, **kwargs):
+    entities = kwargs.get('entities')
+    fov_map = kwargs.get('fov_map')
+    target_x = kwargs.get('target_x')
+    target_y = kwargs.get('target_y')
+
+    results = []
+
+    if not libtcod.map_is_in_fov(fov_map, target_x, target_y):
+        text = 'You cannot target a tile outside your field of view.'
+        results.append(
+            {'consumed': False, 'message': Message(text, libtcod.yellow)})
+        return results
+
+    for entity in entities:
+        if entity.x == target_x and entity.y == target_y and entity.ai:
+            confused_ai = ConfusedMonster(entity.ai, 10)
+
+            confused_ai.owner = entity
+            entity.ai = confused_ai
+            text = ('The eyes of the {0} look vacant,'
+                    ' as he starts to stumble around!').format(entity.name)
+
+            results.append({'consumed': True, 'message': Message(
+                text, libtcod.light_green)})
+
+            break
+    else:
+        text = 'There is no targetable enemy at that location.'
+        results.append(
+            {'consumed': False, 'message': Message(text, libtcod.yellow)})
 
     return results
