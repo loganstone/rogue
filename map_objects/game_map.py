@@ -4,6 +4,7 @@ from random import randint
 from components.ai import BasicMonster
 from components.fighter import Fighter
 from components.item import Item
+from components.stairs import Stairs
 
 from entity import Entity
 from game_messages import Message
@@ -17,10 +18,12 @@ from render_functions import RenderOrder
 
 
 class GameMap:
-    def __init__(self, width, height):
+    def __init__(self, width, height, dungeon_level=1):
         self.width = width
         self.height = height
         self.tiles = self.initialize_tiles()
+
+        self.dungeon_level = dungeon_level
 
     def initialize_tiles(self):
         tiles = [[Tile(True) for y in range(self.height)]
@@ -35,6 +38,9 @@ class GameMap:
                  max_items_per_room):
         rooms = []
         num_rooms = 0
+
+        center_of_last_room_x = None
+        center_of_last_room_y = None
 
         for r in range(max_rooms):
             # random width and height
@@ -60,6 +66,9 @@ class GameMap:
 
                 # center coordinates of new room, will be useful later
                 (new_x, new_y) = new_room.center()
+
+                center_of_last_room_x = new_x
+                center_of_last_room_y = new_y
 
                 if num_rooms == 0:
                     # this is the first room, where the player starts at
@@ -89,6 +98,17 @@ class GameMap:
                     max_items_per_room)
                 rooms.append(new_room)
                 num_rooms += 1
+
+        stairs_component = Stairs(self.dungeon_level + 1)
+        down_stairs = Entity(
+            center_of_last_room_x,
+            center_of_last_room_y,
+            '>',
+            libtcod.white,
+            'Stairs',
+            render_order=RenderOrder.STAIRS,
+            stairs=stairs_component)
+        entities.append(down_stairs)
 
     def create_room(self, room):
         # go through the tiles in the rectangle and make them passable
@@ -122,7 +142,8 @@ class GameMap:
             if not any([entity for entity in entities
                         if entity.x == x and entity.y == y]):
                 if randint(0, 100) < 80:
-                    fighter_component = Fighter(hp=10, defense=0, power=3)
+                    fighter_component = Fighter(
+                        hp=10, defense=0, power=3, xp=35)
                     ai_component = BasicMonster()
                     monster = Entity(x, y, 'o', libtcod.desaturated_green,
                                      'Orc', blocks=True,
@@ -130,7 +151,8 @@ class GameMap:
                                      fighter=fighter_component,
                                      ai=ai_component)
                 else:
-                    fighter_component = Fighter(hp=16, defense=1, power=4)
+                    fighter_component = Fighter(
+                        hp=16, defense=1, power=4, xp=100)
                     ai_component = BasicMonster()
                     monster = Entity(x, y, 'T', libtcod.darker_green,
                                      'Troll', blocks=True,
@@ -189,3 +211,22 @@ class GameMap:
 
     def is_blocked(self, x, y):
         return self.tiles[x][y].blocked
+
+    def next_floor(self, player, message_log, constants):
+        self.dungeon_level += 1
+        entities = [player]
+
+        self.tiles = self.initialize_tiles()
+        self.make_map(constants['max_rooms'],
+                      constants['room_min_size'],
+                      constants['room_max_size'],
+                      constants['map_width'],
+                      constants['map_height'],
+                      player, entities,
+                      constants['max_monsters_per_room'],
+                      constants['max_items_per_room'])
+
+        player.fighter.heal(player.fighter.max_hp // 2)
+        text = 'You take a moment to rest, and recover your strength.'
+        message_log.add_message(Message(text, libtcod.light_violet))
+        return entities

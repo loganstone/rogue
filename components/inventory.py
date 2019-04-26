@@ -21,7 +21,7 @@ class Inventory:
             text = 'You pick up the {0}!'.format(item.name)
             results.append({
                 'item_added': item,
-                'message': Message(text, libtcod.blue)
+                'message': Message(text, libtcod.light_blue)
             })
 
             self.items.append(item)
