@@ -13,7 +13,7 @@ def save_game(player, entities, game_map, message_log, game_state):
 
 
 def load_game():
-    if not os.path.isfile('savegame.dat.db'):
+    if not os.path.isfile('savegame.dat'):
         raise FileNotFoundError
 
     with shelve.open('savegame.dat', 'r') as data_file:

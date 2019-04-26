@@ -1,4 +1,4 @@
-import libtcodpy as libtcod
+import tcod as libtcod
 
 from death_functions import kill_monster, kill_player
 from entity import get_blocking_entities_at_location
