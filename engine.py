@@ -135,8 +135,7 @@ def play_game(player, entities, game_map, message_log, game_state,
                         player, message_log, constants)
                     fov_map = initialize_fov(game_map)
                     fov_recompute = True
-                    tcod.console_clear(con)
-
+                    con.clear(fg=(255, 255, 63))
                     break
             else:
                 text = 'There are no stairs here.'
@@ -304,7 +303,8 @@ def main():
         constants['screen_width'],
         constants['screen_height'],
         constants['window_title'],
-        False)
+        False,
+        renderer=tcod.RENDERER_SDL2)
 
     con = tcod.console.Console(
         constants['screen_width'], constants['screen_height'])
@@ -368,7 +368,7 @@ def main():
                 break
 
         else:
-            con.clear()
+            con.clear(fg=(255, 255, 63))
             play_game(player, entities, game_map, message_log,
                       game_state, con, panel, constants)
 
