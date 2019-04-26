@@ -1,4 +1,4 @@
-import tcod as libtcod
+import tcod
 
 from game_messages import Message
 
@@ -15,13 +15,13 @@ class Inventory:
             text = 'You cannot carry any more, your inventory is full'
             results.append({
                 'item_added': None,
-                'message': Message(text, libtcod.yellow)
+                'message': Message(text, tcod.yellow)
             })
         else:
             text = 'You pick up the {0}!'.format(item.name)
             results.append({
                 'item_added': item,
-                'message': Message(text, libtcod.light_blue)
+                'message': Message(text, tcod.light_blue)
             })
 
             self.items.append(item)
@@ -39,7 +39,7 @@ class Inventory:
                 results.append({'equip': item_entity})
             else:
                 text = 'The {0} cannot be used'.format(item_entity.name)
-                results.append({'message': Message(text, libtcod.yellow)})
+                results.append({'message': Message(text, tcod.yellow)})
         else:
             if item_component.targeting \
                     and not (kwargs.get('target_x') or kwargs.get('target_y')):
@@ -73,6 +73,6 @@ class Inventory:
         self.remove_item(item)
         text = 'You dropped the {0}'.format(item.name)
         results.append(
-            {'item_dropped': item, 'message': Message(text, libtcod.yellow)})
+            {'item_dropped': item, 'message': Message(text, tcod.yellow)})
 
         return results

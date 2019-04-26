@@ -1,4 +1,4 @@
-import tcod as libtcod
+import tcod
 
 from components.equipment import Equipment
 from components.equippable import Equippable
@@ -45,10 +45,10 @@ def get_constants():
     fov_radius = 10
 
     colors = {
-        'dark_wall': libtcod.Color(0, 0, 100),
-        'dark_ground': libtcod.Color(50, 50, 150),
-        'light_wall': libtcod.Color(130, 110, 50),
-        'light_ground': libtcod.Color(200, 180, 50)
+        'dark_wall': tcod.Color(0, 0, 100),
+        'dark_ground': tcod.Color(50, 50, 150),
+        'light_wall': tcod.Color(130, 110, 50),
+        'light_ground': tcod.Color(200, 180, 50)
     }
 
     constants = {
@@ -81,7 +81,7 @@ def get_game_variables(constants):
     level_component = Level()
     equipment_component = Equipment()
     player = Entity(
-        0, 0, '@', libtcod.white,
+        0, 0, '@', tcod.white,
         'Player', blocks=True, render_order=RenderOrder.ACTOR,
         fighter=fighter_component,
         inventory=inventory_component,
@@ -90,7 +90,7 @@ def get_game_variables(constants):
     entities = [player]
 
     equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-    dagger = Entity(0, 0, '-', libtcod.sky, 'Dagger',
+    dagger = Entity(0, 0, '-', tcod.sky, 'Dagger',
                     equippable=equippable_component)
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)

@@ -1,4 +1,4 @@
-import tcod as libtcod
+import tcod
 
 from random import randint
 
@@ -10,7 +10,7 @@ class BasicMonster:
     def take_turn(self, target, fov_map, game_map, entities):
         results = []
         monster = self.owner
-        if libtcod.map_is_in_fov(fov_map, monster.x, monster.y):
+        if tcod.map_is_in_fov(fov_map, monster.x, monster.y):
 
             if monster.distance_to(target) >= 2:
                 monster.move_astar(target, entities, game_map)
@@ -40,6 +40,6 @@ class ConfusedMonster:
         else:
             self.owner.ai = self.previous_ai
             text = 'The {0} is no longer confused!'.format(self.owner.name)
-            results.append({'message': Message(text, libtcod.red)})
+            results.append({'message': Message(text, tcod.red)})
 
         return results
