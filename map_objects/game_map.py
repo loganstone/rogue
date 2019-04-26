@@ -2,6 +2,8 @@ import tcod as libtcod
 from random import randint
 
 from components.ai import BasicMonster
+from components.equipment import EquipmentSlots
+from components.equippable import Equippable
 from components.fighter import Fighter
 from components.item import Item
 from components.stairs import Stairs
@@ -139,6 +141,8 @@ class GameMap:
 
         item_chances = {
             'healing_potion': 35,
+            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
+            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
             'lightning_scroll': from_dungeon_level(
                 [[25, 4]], self.dungeon_level),
             'fireball_scroll': from_dungeon_level(
@@ -189,6 +193,17 @@ class GameMap:
                                   'Healing Potion',
                                   render_order=RenderOrder.ITEM,
                                   item=item_component)
+                elif item_choice == 'sword':
+                    equippable_component = Equippable(
+                        EquipmentSlots.MAIN_HAND, power_bonus=3)
+                    item = Entity(x, y, '/', libtcod.sky, 'Sword',
+                                  equippable=equippable_component)
+                elif item_choice == 'shield':
+                    equippable_component = Equippable(
+                        EquipmentSlots.OFF_HAND, defense_bonus=1)
+                    item = Entity(
+                        x, y, '[', libtcod.darker_orange, 'Shield',
+                        equippable=equippable_component)
                 elif item_choice == 'fireball_scroll':
                     text = ('Left-click a target tile for the fireball,'
                             ' or right-click to cancel.')

@@ -121,7 +121,7 @@ def render_all(con, panel, entities, player, game_map, fov_map,
             inv_title = ('Press the key next to an item to drop it,'
                          ' or Esc to cancel.\n')
 
-        inventory_menu(con, inv_title, player.inventory,
+        inventory_menu(con, inv_title, player,
                        50, screen_width, screen_height)
     elif game_state == GameStates.LEVEL_UP:
         text = 'Level up! Choose a stat to raise:'
