@@ -178,8 +178,9 @@ def play_game(player, entities, game_map, message_log, game_state,
             elif game_state == GameStates.TARGETING:
                 player_turn_results.append({'targeting_cancelled': True})
             else:
-                save_game(player, entities, game_map, message_log, game_state)
-
+                if player.fighter.hp > 0:
+                    save_game(player, entities, game_map,
+                              message_log, game_state)
                 return True
 
         if fullscreen:
