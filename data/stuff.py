@@ -4,6 +4,8 @@ from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.item import Item
 
+from data import tile
+
 from game_messages import Message
 
 from item_functions import (cast_confuse,
@@ -34,13 +36,15 @@ class Consumable(ItemBase):
 class Scroll(Consumable):
 
     def __init__(self, name, color, item_component):
-        Consumable.__init__(self, name, '#', color, item_component)
+        Consumable.__init__(
+            self, name, tile.SCROLL_TILE, color, item_component)
 
 
 class Potion(Consumable):
 
     def __init__(self, name, color, item_component):
-        Consumable.__init__(self, name, '!', color, item_component)
+        Consumable.__init__(
+            self, name, tile.HEALINGPOTION_TILE, color, item_component)
 
 
 class Equipment(ItemBase):
@@ -113,7 +117,7 @@ class Sword(Equipment):
         Equipment.__init__(
             self,
             'Sword',
-            '/',
+            tile.SWORD_TILE,
             tcod.sky,
             Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3))
 
@@ -125,7 +129,7 @@ class Shield(Equipment):
         Equipment.__init__(
             self,
             'Shield',
-            '[',
+            tile.SHIELD_TILE,
             tcod.darker_orange,
             Equippable(EquipmentSlots.OFF_HAND, defense_bonus=1))
 

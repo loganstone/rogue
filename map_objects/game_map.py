@@ -3,6 +3,8 @@ from random import randint
 
 from components.stairs import Stairs
 
+from data.tile import STAIRSDOWN_TILE
+
 from entity import Entity
 from game_messages import Message
 
@@ -100,7 +102,7 @@ class GameMap:
         down_stairs = Entity(
             center_of_last_room_x,
             center_of_last_room_y,
-            '>',
+            STAIRSDOWN_TILE,
             tcod.white,
             'Stairs',
             render_order=RenderOrder.STAIRS,

@@ -6,6 +6,8 @@ from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 
+from data.tile import WALL_TILE, PLAYER_TILE, DAGGER_TILE
+
 from entity import Entity
 
 from equipment_slots import EquipmentSlots
@@ -81,7 +83,7 @@ def get_game_variables(constants):
     level_component = Level()
     equipment_component = Equipment()
     player = Entity(
-        0, 0, '@', tcod.white,
+        0, 0, PLAYER_TILE, tcod.white,
         'Player', blocks=True, render_order=RenderOrder.ACTOR,
         fighter=fighter_component,
         inventory=inventory_component,
@@ -90,7 +92,7 @@ def get_game_variables(constants):
     entities = [player]
 
     equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-    dagger = Entity(0, 0, '-', tcod.sky, 'Dagger',
+    dagger = Entity(0, 0, DAGGER_TILE, tcod.sky, 'Dagger',
                     equippable=equippable_component)
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)

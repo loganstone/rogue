@@ -3,6 +3,8 @@ import tcod
 from components.ai import BasicMonster
 from components.fighter import Fighter
 
+from data import tile
+
 
 class Monster:
     chances = 0
@@ -22,7 +24,7 @@ class Orc(Monster):
         Monster.__init__(
             self,
             self.__class__.__name__,
-            'o',
+            tile.ORC_TILE,
             tcod.desaturated_green,
             Fighter(hp=20, defense=0, power=4, xp=35),
             BasicMonster())
@@ -35,7 +37,7 @@ class Troll(Monster):
         Monster.__init__(
             self,
             self.__class__.__name__,
-            'T',
+            tile.TROLL_TILE,
             tcod.darker_green,
             Fighter(hp=30, defense=2, power=8, xp=100),
             BasicMonster())

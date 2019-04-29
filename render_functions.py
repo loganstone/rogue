@@ -2,6 +2,8 @@ import tcod
 
 from enum import Enum, auto
 
+from data.tile import load_customfont, WALL_TILE, FLOOR_TILE
+
 from game_states import GameStates
 
 from menus import character_screen, inventory_menu, level_up_menu
@@ -51,6 +53,7 @@ def render_all(con, panel, entities, player, game_map, fov_map,
                screen_height, bar_width, panel_height, panel_y,
                mouse, colors, game_state):
     # Draw all the tiles in the game map
+    load_customfont()
     if fov_recompute:
         for y in range(game_map.height):
             for x in range(game_map.width):
@@ -60,26 +63,27 @@ def render_all(con, panel, entities, player, game_map, fov_map,
                 if visible:
                     if wall:
                         tcod.console_put_char_ex(
-                            con, x, y, '#',
-                            colors.get('light_wall'),
+                            con, x, y, WALL_TILE,
+                            tcod.white,
                             tcod.black)
                     else:
                         tcod.console_put_char_ex(
-                            con, x, y, '.',
-                            colors.get('light_ground'),
+                            con, x, y, FLOOR_TILE,
+                            tcod.white,
                             tcod.black)
                     game_map.tiles[x][y].explored = True
 
                 elif game_map.tiles[x][y].explored:
                     if wall:
+
                         tcod.console_put_char_ex(
-                            con, x, y, '#',
-                            colors.get('dark_wall'),
+                            con, x, y, WALL_TILE,
+                            tcod.gray,
                             tcod.black)
                     else:
                         tcod.console_put_char_ex(
-                            con, x, y, '.',
-                            colors.get('dark_ground'),
+                            con, x, y, FLOOR_TILE,
+                            tcod.gray,
                             tcod.black)
 
     entities_in_render_order = sorted(

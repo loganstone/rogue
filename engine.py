@@ -296,8 +296,9 @@ def main():
     constants = get_constants()
 
     tcod.console_set_custom_font(
-        'dejavu16x16_gs_tc.png',
-        tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD)
+        'tiledFont.png',
+        tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_TCOD,
+        32, 10)
 
     tcod.console_init_root(
         constants['screen_width'],
