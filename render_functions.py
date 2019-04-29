@@ -59,24 +59,28 @@ def render_all(con, panel, entities, player, game_map, fov_map,
 
                 if visible:
                     if wall:
-                        tcod.console_set_char_background(
-                            con, x, y, colors.get('light_wall'),
-                            tcod.BKGND_SET)
+                        tcod.console_put_char_ex(
+                            con, x, y, '#',
+                            colors.get('light_wall'),
+                            tcod.black)
                     else:
-                        tcod.console_set_char_background(
-                            con, x, y, colors.get('light_ground'),
-                            tcod.BKGND_SET)
+                        tcod.console_put_char_ex(
+                            con, x, y, '.',
+                            colors.get('light_ground'),
+                            tcod.black)
                     game_map.tiles[x][y].explored = True
 
                 elif game_map.tiles[x][y].explored:
                     if wall:
-                        tcod.console_set_char_background(
-                            con, x, y, colors.get('dark_wall'),
-                            tcod.BKGND_SET)
+                        tcod.console_put_char_ex(
+                            con, x, y, '#',
+                            colors.get('dark_wall'),
+                            tcod.black)
                     else:
-                        tcod.console_set_char_background(
-                            con, x, y, colors.get('dark_ground'),
-                            tcod.BKGND_SET)
+                        tcod.console_put_char_ex(
+                            con, x, y, '.',
+                            colors.get('dark_ground'),
+                            tcod.black)
 
     entities_in_render_order = sorted(
         entities, key=lambda x: x.render_order.value)
