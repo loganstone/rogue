@@ -1,24 +1,18 @@
 import tcod
 from random import randint
 
-from components.equipment import EquipmentSlots
-from components.equippable import Equippable
-from components.item import Item
 from components.stairs import Stairs
 
 from data.creature import MONSTERS
+from data.stuff import ITEMS
 
 from entity import Entity
 from game_messages import Message
-from item_functions import (cast_confuse,
-                            cast_fireball,
-                            cast_lightning,
-                            heal)
+
 from map_objects.rectangle import Rect
 from map_objects.tile import Tile
 from random_utils import (from_dungeon_level,
-                          random_choice_from_dict,
-                          random_choice_from_monster_list)
+                          random_choice_from_class_list)
 from render_functions import RenderOrder
 
 
@@ -135,18 +129,6 @@ class GameMap:
         number_of_monsters = randint(0, max_monsters_per_room)
         number_of_items = randint(0, max_items_per_room)
 
-        item_chances = {
-            'healing_potion': 35,
-            'sword': from_dungeon_level([[5, 4]], self.dungeon_level),
-            'shield': from_dungeon_level([[15, 8]], self.dungeon_level),
-            'lightning_scroll': from_dungeon_level(
-                [[25, 4]], self.dungeon_level),
-            'fireball_scroll': from_dungeon_level(
-                [[25, 6]], self.dungeon_level),
-            'confusion_scroll': from_dungeon_level(
-                [[10, 2]], self.dungeon_level),
-        }
-
         for i in range(number_of_monsters):
             # Choose a random location in the room
             x = randint(room.x1 + 1, room.x2 - 1)
@@ -154,7 +136,7 @@ class GameMap:
 
             if not any([entity for entity in entities
                         if entity.x == x and entity.y == y]):
-                monster = random_choice_from_monster_list(
+                monster = random_choice_from_class_list(
                     MONSTERS, self.dungeon_level)
                 entities.append(
                     Entity(x, y,
@@ -171,57 +153,26 @@ class GameMap:
 
             if not any([entity for entity in entities
                         if entity.x == x and entity.y == y]):
-                item_choice = random_choice_from_dict(item_chances)
-                if item_choice == 'healing_potion':
-                    item_component = Item(use_function=heal, amount=40)
-                    item = Entity(x, y, '!', tcod.violet,
-                                  'Healing Potion',
-                                  render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                elif item_choice == 'sword':
-                    equippable_component = Equippable(
-                        EquipmentSlots.MAIN_HAND, power_bonus=3)
-                    item = Entity(x, y, '/', tcod.sky, 'Sword',
-                                  equippable=equippable_component)
-                elif item_choice == 'shield':
-                    equippable_component = Equippable(
-                        EquipmentSlots.OFF_HAND, defense_bonus=1)
-                    item = Entity(
-                        x, y, '[', tcod.darker_orange, 'Shield',
-                        equippable=equippable_component)
-                elif item_choice == 'fireball_scroll':
-                    text = ('Left-click a target tile for the fireball,'
-                            ' or right-click to cancel.')
-                    item_component = Item(
-                        use_function=cast_fireball,
-                        targeting=True,
-                        targeting_message=Message(text, tcod.light_cyan),
-                        damage=25, radius=3)
-                    item = Entity(x, y, '#', tcod.red,
-                                  'Fireball Scroll',
-                                  render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                elif item_choice == 'confusion_scroll':
-                    text = ('Left-click an enemy to confuse it,'
-                            ' or right-click to cancel.')
-                    item_component = Item(
-                        use_function=cast_confuse,
-                        targeting=True,
-                        targeting_message=Message(text, tcod.light_cyan))
-                    item = Entity(x, y, '#', tcod.light_pink,
-                                  'Confusion Scroll',
-                                  render_order=RenderOrder.ITEM,
-                                  item=item_component)
-                else:
-                    item_component = Item(
-                        use_function=cast_lightning,
-                        damage=40, maximum_range=5)
-                    item = Entity(x, y, '#', tcod.yellow,
-                                  'Lightning Scroll',
-                                  render_order=RenderOrder.ITEM,
-                                  item=item_component)
 
-                entities.append(item)
+                item = random_choice_from_class_list(
+                    ITEMS, self.dungeon_level)
+
+                if item.is_consumable:
+                    entities.append(
+                        Entity(x, y,
+                               item.character,
+                               item.color,
+                               item.name,
+                               render_order=RenderOrder.ITEM,
+                               item=item.item_component))
+
+                if item.is_equippable:
+                    entities.append(
+                        Entity(x, y,
+                               item.character,
+                               item.color,
+                               item.name,
+                               equippable=item.equippable_component))
 
     def is_blocked(self, x, y):
         return self.tiles[x][y].blocked

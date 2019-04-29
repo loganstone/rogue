@@ -28,14 +28,14 @@ def random_choice_from_dict(choice_dict):
     return choices[random_choice_index(chances)]
 
 
-def random_choice_from_monster_list(monster_classes, dungeon_level):
+def random_choice_from_class_list(class_list, dungeon_level):
     chances = []
     choices = []
-    for monster in monster_classes:
-        if isinstance(monster.chances, list):
-            chances.append(from_dungeon_level(monster.chances, dungeon_level))
+    for class_ in class_list:
+        if isinstance(class_.chances, list):
+            chances.append(from_dungeon_level(class_.chances, dungeon_level))
         else:
-            chances.append(monster.chances)
-        choices.append(monster())
+            chances.append(class_.chances)
+        choices.append(class_())
 
     return choices[random_choice_index(chances)]
