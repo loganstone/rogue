@@ -15,9 +15,14 @@ $ cd rogue
 $ pip install -r requirements.txt
 ```
 
-* Run
-
+* Run ASCII
 ```shell
+$ python engine.py
+```
+
+* Run TITLE
+```shell
+$ git checkout origin/graphical
 $ python engine.py
 ```
 
