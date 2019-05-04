@@ -1,5 +1,7 @@
 import tcod
 
+from random import randint
+
 from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.item import Item
@@ -55,23 +57,25 @@ class HealingPotion(Potion):
     chances = 35
 
     def __init__(self):
+        amount = randint(30, 40)
         Potion.__init__(
             self,
             'Healing Potion',
             tcod.violet,
-            Item(use_function=heal, amount=40))
+            Item(use_function=heal, amount=amount))
 
 
 class LightningBoltScroll(Scroll):
     chances = [[25, 4]]
 
     def __init__(self):
+        damage = randint(10, 50)
         Scroll.__init__(
             self,
             'Lightning Bolt Scroll',
             tcod.yellow,
             Item(use_function=cast_lightning,
-                 damage=40, maximum_range=5))
+                 damage=damage, maximum_range=5))
 
 
 class FireballScroll(Scroll):
@@ -80,6 +84,7 @@ class FireballScroll(Scroll):
     def __init__(self):
         text = ('Left-click a target tile for the fireball,'
                 ' or right-click to cancel.')
+        damage = randint(20, 25)
         Scroll.__init__(
             self,
             'Fireball Scroll',
@@ -87,7 +92,7 @@ class FireballScroll(Scroll):
             Item(use_function=cast_fireball,
                  targeting=True,
                  targeting_message=Message(text, tcod.light_cyan),
-                 damage=25, radius=3))
+                 damage=damage, radius=3))
 
 
 class ConfusionScroll(Scroll):
