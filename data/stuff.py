@@ -120,7 +120,7 @@ class Sword(Equipment):
             'Sword',
             '/',
             tcod.sky,
-            Equippable(EquipmentSlots.MAIN_HAND, power_bonus=3))
+            Equippable(EquipmentSlots.MAIN_HAND, power_bonus=4))
 
 
 class Shield(Equipment):
