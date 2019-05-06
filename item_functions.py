@@ -95,6 +95,8 @@ def cast_confuse(*args, **kwargs):
     fov_map = kwargs.get('fov_map')
     target_x = kwargs.get('target_x')
     target_y = kwargs.get('target_y')
+    target_y = kwargs.get('target_y')
+    number_of_turns = kwargs.get('number_of_turns')
 
     results = []
 
@@ -106,7 +108,7 @@ def cast_confuse(*args, **kwargs):
 
     for entity in entities:
         if entity.x == target_x and entity.y == target_y and entity.ai:
-            confused_ai = ConfusedMonster(entity.ai, 10)
+            confused_ai = ConfusedMonster(entity.ai, number_of_turns)
 
             confused_ai.owner = entity
             entity.ai = confused_ai

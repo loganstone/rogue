@@ -108,7 +108,8 @@ class ConfusionScroll(Scroll):
             tcod.light_pink,
             Item(use_function=cast_confuse,
                  targeting=True,
-                 targeting_message=Message(text, tcod.light_cyan)))
+                 targeting_message=Message(text, tcod.light_cyan),
+                 number_of_turns=10))
 
 
 class Sword(Equipment):
