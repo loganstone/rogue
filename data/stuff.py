@@ -112,6 +112,17 @@ class ConfusionScroll(Scroll):
                  number_of_turns=10))
 
 
+class Dagger(Equipment):
+
+    def __init__(self):
+        Equipment.__init__(
+            self,
+            'Dagger',
+            '_',
+            tcod.sky,
+            Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2))
+
+
 class Sword(Equipment):
     chances = [[5, 4]]
 

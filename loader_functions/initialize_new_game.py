@@ -1,14 +1,14 @@
 import tcod
 
 from components.equipment import Equipment
-from components.equippable import Equippable
 from components.fighter import Fighter
 from components.inventory import Inventory
 from components.level import Level
 
-from entity import Entity
 
-from equipment_slots import EquipmentSlots
+from data.stuff import Dagger
+
+from entity import Entity
 
 from game_messages import MessageLog
 
@@ -89,9 +89,12 @@ def get_game_variables(constants):
         equipment=equipment_component)
     entities = [player]
 
-    equippable_component = Equippable(EquipmentSlots.MAIN_HAND, power_bonus=2)
-    dagger = Entity(0, 0, '-', tcod.sky, 'Dagger',
-                    equippable=equippable_component)
+    item = Dagger()
+    dagger = Entity(0, 0,
+                    item.character,
+                    item.color,
+                    item.name,
+                    equippable=item.equippable_component)
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)
 
