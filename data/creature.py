@@ -3,6 +3,9 @@ import tcod
 from components.ai import BasicMonster
 from components.fighter import Fighter
 
+from entity import Entity
+from render_functions import RenderOrder
+
 
 class Monster:
     chances = 0
@@ -13,6 +16,15 @@ class Monster:
         self.color = color
         self.fighter = fighter
         self.ai_component = ai_component
+
+    def get_entity(self, x, y):
+        return Entity(x, y,
+                      self.character,
+                      self.color,
+                      self.name, blocks=True,
+                      render_order=RenderOrder.ACTOR,
+                      fighter=self.fighter,
+                      ai=self.ai_component)
 
 
 class Orc(Monster):

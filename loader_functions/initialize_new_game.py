@@ -89,12 +89,7 @@ def get_game_variables(constants):
         equipment=equipment_component)
     entities = [player]
 
-    item = Dagger()
-    dagger = Entity(0, 0,
-                    item.character,
-                    item.color,
-                    item.name,
-                    equippable=item.equippable_component)
+    dagger = Dagger().get_entity(0, 0)
     player.inventory.add_item(dagger)
     player.equipment.toggle_equip(dagger)
 

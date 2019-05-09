@@ -6,6 +6,9 @@ from components.equipment import EquipmentSlots
 from components.equippable import Equippable
 from components.item import Item
 
+from entity import Entity
+from render_functions import RenderOrder
+
 from game_messages import Message
 
 from item_functions import (cast_confuse,
@@ -24,6 +27,9 @@ class ItemBase:
         self.character = character
         self.color = color
 
+    def get_entity(self, x, y):
+        raise NotImplementedError
+
 
 class Consumable(ItemBase):
     is_consumable = True
@@ -31,6 +37,14 @@ class Consumable(ItemBase):
     def __init__(self, name, character, color, item_component):
         ItemBase.__init__(self, name, character, color)
         self.item_component = item_component
+
+    def get_entity(self, x, y):
+        return Entity(x, y,
+                      self.character,
+                      self.color,
+                      self.name,
+                      render_order=RenderOrder.ITEM,
+                      item=self.item_component)
 
 
 class Scroll(Consumable):
@@ -51,6 +65,13 @@ class Equipment(ItemBase):
     def __init__(self, name, character, color, equippable_component):
         ItemBase.__init__(self, name, character, color)
         self.equippable_component = equippable_component
+
+    def get_entity(self, x, y):
+        return Entity(x, y,
+                      self.character,
+                      self.color,
+                      self.name,
+                      equippable=self.equippable_component)
 
 
 class HealingPotion(Potion):

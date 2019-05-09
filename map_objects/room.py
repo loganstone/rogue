@@ -1,11 +1,9 @@
 from random import randint
 
-from entity import Entity
 from data.creature import MONSTERS
 from data.stuff import ITEMS
 
 from random_utils import random_choice_from_class_list
-from render_functions import RenderOrder
 
 
 class Rect:
@@ -51,14 +49,7 @@ class Room(Rect):
             if not self.is_something_already(entities, x, y):
                 monster = random_choice_from_class_list(
                     MONSTERS, self.dungeon_level)
-                entities.append(
-                    Entity(x, y,
-                           monster.character,
-                           monster.color,
-                           monster.name, blocks=True,
-                           render_order=RenderOrder.ACTOR,
-                           fighter=monster.fighter,
-                           ai=monster.ai_component))
+                entities.append(monster.get_entity(x, y))
 
     def placement_items(self, number_of_items, entities):
 
@@ -67,20 +58,4 @@ class Room(Rect):
             if not self.is_something_already(entities, x, y):
                 item = random_choice_from_class_list(
                     ITEMS, self.dungeon_level)
-
-                if item.is_consumable:
-                    entities.append(
-                        Entity(x, y,
-                               item.character,
-                               item.color,
-                               item.name,
-                               render_order=RenderOrder.ITEM,
-                               item=item.item_component))
-
-                if item.is_equippable:
-                    entities.append(
-                        Entity(x, y,
-                               item.character,
-                               item.color,
-                               item.name,
-                               equippable=item.equippable_component))
+                entities.append(item.get_entity(x, y))
