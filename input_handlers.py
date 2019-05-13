@@ -42,7 +42,7 @@ def handle_player_turn_keys(key):
     elif key_char == 'z':
         return {'wait': True}
 
-    if key_char == 'g':
+    if key_char == ',':
         return {'pickup': True}
     elif key_char == 'i':
         return {'show_inventory': True}
